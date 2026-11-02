@@ -1,0 +1,35 @@
+{
+  "dataset": "UCI Heart Disease - processed Cleveland",
+  "version": "cleveland-binary-v1",
+  "source_url": "https://archive.ics.uci.edu/ml/machine-learning-databases/heart-disease/processed.cleveland.data",
+  "doi": "https://doi.org/10.24432/C52P4X",
+  "license": "CC BY 4.0",
+  "source_sha256": "a74b7efa387bc9d108d7d0115d831fe9b414b29ae7124f331b622b4efa0427c8",
+  "csv_sha256": "6d2db9bce9b8181df4f149b4ed34d8873682e093026bcb52e86eae1e8b7fdd58",
+  "rows": 303,
+  "columns": [
+    "age",
+    "sex",
+    "cp",
+    "trestbps",
+    "chol",
+    "fbs",
+    "restecg",
+    "thalach",
+    "exang",
+    "oldpeak",
+    "slope",
+    "ca",
+    "thal",
+    "target"
+  ],
+  "target_mapping": "0 -> 0; 1,2,3,4 -> 1",
+  "class_counts": {
+    "0": 164,
+    "1": 139
+  },
+  "missing_counts": {
+    "ca": 4,
+    "thal": 2
+  }
+}

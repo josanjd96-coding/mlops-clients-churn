@@ -1,0 +1,42 @@
+# Configuración de desarrollo (sin secretos). Seleccionar con APP_ENV=dev (por defecto).
+entorno: dev
+semilla: 42
+
+datos:
+  ruta: data/churn.csv
+  target: abandona
+  test_size: 0.2      # fracción reservada para test final (no se usa para elegir hiperparámetros)
+  val_size: 0.2       # fracción de lo restante para validación
+
+modelo:
+  tipo: regresion_logistica        # regresion_logistica | random_forest (ver models.py)
+  parametros:
+    C: 1.0
+    max_iter: 1000
+  umbral: 0.5
+
+busqueda:                           # sesión 2: espacio pequeño y acotado
+  param_grid:
+    clasificador__C: [0.01, 0.1, 1.0, 10.0]
+    clasificador__class_weight: [null, balanced]
+  cv: 5
+  scoring: roc_auc
+
+artefactos:
+  dir: artifacts
+  modelo: artifacts/model.joblib
+  metadatos: artifacts/metadata.json
+
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experimento: churn-abandono
+  modelo_registrado: churn-abandono
+
+api:
+  host: 127.0.0.1
+  port: 8000
+
+monitorizacion:
+  referencia: data/churn_referencia.csv
+  actual: data/churn_actual.csv
+  informe: reports/drift_report.html

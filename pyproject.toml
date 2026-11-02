@@ -1,0 +1,53 @@
+[project]
+name = "mlops-course"
+version = "0.1.0"
+description = "Proyecto de prácticas MLOps: del notebook a un modelo utilizable (churn)."
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "pandas==3.0.6",
+    "numpy==2.5.3",
+    "scikit-learn==1.9.1",
+    "joblib==1.6.0",
+    "pyyaml==6.0.3",
+    "mlflow==3.16.1",
+    "fastapi==0.142.2",
+    "uvicorn==0.54.0",
+    "pydantic==2.13.5",
+    "httpx==0.28.1",
+    "streamlit==1.64.0",
+    "requests==2.34.2",
+    "evidently==0.7.23",
+    "jupyterlab==4.6.4",
+    "ipykernel==7.4.0",
+    "nbconvert==7.17.1",
+    "ruff==0.16.9",
+]
+
+[dependency-groups]
+dev = ["pytest==9.1.1"]
+optuna = ["optuna==5.0.0"]
+onnx = ["skl2onnx==1.20.0", "onnxruntime==1.30.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mlops_course"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+extend-include = ["*.ipynb"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff.lint.per-file-ignores]
+# Imports preparados para los TODO pendientes. Puedes borrar esta sección al
+# terminar la práctica 4.
+"src/mlops_course/*.py" = ["F401"]

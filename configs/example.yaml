@@ -1,0 +1,33 @@
+# Plantilla de configuración. Copiar a configs/<entorno>.yaml y adaptar.
+# NO incluir contraseñas, tokens ni rutas absolutas personales.
+# Los secretos se pasan por variables de entorno (p. ej. MLFLOW_TRACKING_URI, API_URL).
+entorno: mi_entorno
+semilla: 42
+datos:
+  ruta: data/churn.csv
+  target: abandona
+  test_size: 0.2
+  val_size: 0.2
+modelo:
+  tipo: regresion_logistica
+  parametros: {C: 1.0, max_iter: 1000}
+  umbral: 0.5
+busqueda:
+  param_grid: {clasificador__C: [0.1, 1.0]}
+  cv: 5
+  scoring: roc_auc
+artefactos:
+  dir: artifacts
+  modelo: artifacts/model.joblib
+  metadatos: artifacts/metadata.json
+mlflow:
+  tracking_uri: sqlite:///mlflow.db
+  experimento: churn-abandono
+  modelo_registrado: churn-abandono
+api:
+  host: 127.0.0.1
+  port: 8000
+monitorizacion:
+  referencia: data/churn_referencia.csv
+  actual: data/churn_actual.csv
+  informe: reports/drift_report.html

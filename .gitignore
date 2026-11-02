@@ -1,0 +1,25 @@
+# Entornos y cachés
+.venv/
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.pytest_cache/
+.ipynb_checkpoints/
+*.egg-info/
+.DS_Store
+
+# Salidas generadas localmente (se regeneran con los comandos del README)
+artifacts/
+reports/
+mlruns/
+mlartifacts/
+mlflow.db
+
+# Datos derivados de la sesión 4 (se regeneran con `monitoring simular`)
+data/churn_referencia.csv
+data/churn_actual.csv
+
+# Secretos y configuración personal: NUNCA al repositorio
+.env
+.env.*
+configs/local*.yaml
