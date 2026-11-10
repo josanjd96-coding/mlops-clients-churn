@@ -12,12 +12,14 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.tree import DecisionTreeClassifier
 
 from mlops_course.data import CATEGORIAS, CATEGORICAS, NUMERICAS
 
 ESTIMADORES = {
     "regresion_logistica": LogisticRegression,
     "random_forest": RandomForestClassifier,
+    'decision_tree' : DecisionTreeClassifier
 }
 
 
@@ -42,4 +44,23 @@ def build_pipeline(tipo: str, parametros: dict[str, Any] | None = None) -> Pipel
     #     para CATEGORICAS.
     #   - Pipeline con los pasos "preprocesado" y "clasificador"
     #     (usa build_estimator(tipo, parametros)).
-    raise NotImplementedError("TODO S1: build_pipeline")
+
+    preprocesamiento = ColumnTransformer(
+        [
+            ("numericas", StandardScaler(), NUMERICAS),
+            ("categoricas", OneHotEncoder(
+                categories=[CATEGORIAS[c] for c in CATEGORICAS],
+                handle_unknown="ignore"
+                ), CATEGORICAS),
+        ]
+    )
+
+    modelo = Pipeline(
+    [
+        ("preprocesamiento", preprocesamiento),
+        ("clasificador", build_estimator(tipo, parametros)),
+    ]
+)
+
+
+    return modelo

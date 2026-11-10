@@ -36,15 +36,39 @@ def evaluate(model: Pipeline, X: pd.DataFrame, y: pd.Series, umbral: float) -> d
     """Métricas de clasificación con el umbral de decisión configurado."""
     # TODO S1: calcular la probabilidad de la clase 1 con predict_proba, aplicar el
     # umbral y devolver un dict con roc_auc, f1, precision, recall y accuracy.
-    raise NotImplementedError("TODO S1: evaluate")
+    y_prob = model.predict_proba(X)[:,1]
+    y_pred = (y_prob >= umbral).astype(int)
+
+    dict_metricas = {
+        "roc_auc" : roc_auc_score(y, y_prob),
+        "f1" : f1_score(y, y_pred),
+        "precision" : precision_score(y, y_pred, zero_division=0),
+        "recall" : recall_score(y, y_pred),
+        "accuracy" : accuracy_score(y, y_pred)
+    }
+
+    return dict_metricas
 
 
 def save_artifacts(model: Pipeline, metadatos: dict[str, Any], cfg: dict) -> None:
     """Guarda el pipeline (joblib) y sus metadatos (JSON) en `artifacts/`."""
     # TODO S1: crear la carpeta si no existe, guardar el modelo con joblib.dump en
+
+
     # cfg["artefactos"]["modelo"] y los metadatos con json.dump en
     # cfg["artefactos"]["metadatos"]. Usa resolve_path para las rutas.
-    raise NotImplementedError("TODO S1: save_artifacts")
+    # Serializamos nuestro modelo
+    ruta_modelo = resolve_path(cfg["artefactos"]["modelo"])
+    ruta_modelo.parent.mkdir(parents=True, exist_ok=True)
+    # serializar (guardar)
+    joblib.dump(model, filename=ruta_modelo)
+
+    # Guardamos nuestros metadatos
+    ruta_metadatos = resolve_path(cfg["artefactos"]["metadatos"])
+    with ruta_metadatos.open('w', encoding='utf-8') as f:
+        json.dump(metadatos, f, indent=2, ensure_ascii=False)
+
+    print(f'Modelo guardado en {ruta_modelo} y metadatos en {ruta_metadatos}')
 
 
 def search(cfg: dict, train: pd.DataFrame) -> tuple[Pipeline, dict, float]:
@@ -74,16 +98,23 @@ def log_to_mlflow(
 
 
 def main() -> None:
+
+    # Generrar los diferentes argumentos que recibirá nuestro script
+    print('Hello class')
     parser = argparse.ArgumentParser(description="Entrena el modelo de abandono")
     parser.add_argument("--entorno", default=None, help="dev | preprod (o APP_ENV)")
     parser.add_argument("--busqueda", action="store_true", help="GridSearchCV acotado")
     args = parser.parse_args()
 
+    # Cargar la configuración
     cfg = load_config(args.entorno)
+
+    # Cwrgar los datos y dividir en en train, validación y test
     df = load_data(resolve_path(cfg["datos"]["ruta"]))
     train, val, test = split_data(
-        df, cfg["datos"]["test_size"], cfg["datos"]["val_size"], cfg["semilla"]
+        df, test_size = cfg["datos"]["test_size"], val_size = cfg["datos"]["val_size"], semilla = cfg["semilla"]
     )
+    
     print(f"Filas -> train: {len(train)}, validación: {len(val)}, test: {len(test)}")
     X_train, y_train = x_y(train)
     umbral = cfg["modelo"]["umbral"]

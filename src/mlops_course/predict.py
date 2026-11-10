@@ -29,6 +29,14 @@ def load_model(cfg: dict) -> tuple[Any, dict]:
     # TODO S1: comprobar que existe cfg["artefactos"]["modelo"] (FileNotFoundError
     # con un mensaje útil si no), cargarlo con joblib.load y leer el JSON de
     # cfg["artefactos"]["metadatos"]. Devolver (modelo, metadatos).
+    ruta_modelo = resolve_path(cfg["artefactos"]["metadatos"])
+    if not ruta_modelo.exists():
+        raise FileNotFoundError(
+            f'No exite {ruta_modelo}. Para ello tienes que entrenar antes un modelo'
+        )
+
+    # Deserializamos nuestro modelo
+
     raise NotImplementedError("TODO S1: load_model")
 
 
@@ -44,6 +52,8 @@ def predict_df(model, df: pd.DataFrame, umbral: float) -> pd.DataFrame:
     # TODO S1: usar model.predict_proba sobre df[FEATURES], quedarse con la
     # columna de la clase 1 y aplicar el umbral. Devolver un DataFrame con las
     # columnas "probabilidad" y "abandona" y el mismo índice que df.
+    y_proba = model.predict_proba(df[FEATURES])[:,1]
+    y_pred = ()
     raise NotImplementedError("TODO S1: predict_df")
 
 

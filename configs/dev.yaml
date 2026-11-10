@@ -1,6 +1,6 @@
 # Configuración de desarrollo (sin secretos). Seleccionar con APP_ENV=dev (por defecto).
 entorno: dev
-semilla: 42
+semilla: 1234
 
 datos:
   ruta: data/churn.csv
